@@ -72,7 +72,7 @@ export const ngAdd = (options: NgAddOptions) => async (
 
   project.targets.add({
     name: 'deploy',
-    builder: '@jefiozie/ngx-aws-deploy:deploy',
+    builder: '@genexus/ngx-aws-deploy:deploy',
     options: {},
   });
 

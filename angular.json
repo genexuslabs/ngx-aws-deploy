@@ -104,7 +104,7 @@
           ]
         },
         "deploy": {
-          "builder": "@jefiozie/ngx-aws-deploy:deploy",
+          "builder": "@genexus/ngx-aws-deploy:deploy",
           "options": {},
           "configurations": {
             "production": {

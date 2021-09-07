@@ -6,10 +6,10 @@
   "commit": false,
   "contributors": [
     {
-      "login": "Jefiozie",
+      "login": "genexus",
       "name": "Jeffrey Bosch",
       "avatar_url": "https://avatars0.githubusercontent.com/u/17835373?v=4",
-      "profile": "https://jefiozie.github.io",
+      "profile": "https://genexus.github.io",
       "contributions": [
         "code",
         "content",
@@ -91,7 +91,7 @@
   ],
   "contributorsPerLine": 7,
   "projectName": "ngx-aws-deploy",
-  "projectOwner": "Jefiozie",
+  "projectOwner": "genexus",
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true

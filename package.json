@@ -26,7 +26,7 @@
     "update": "nx migrate latest",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "symlinks": "npx symlink-dir ./dist/libs ./node_modules/@jefiozie",
+    "symlinks": "npx symlink-dir ./dist/libs ./node_modules/@genexus",
     "workspace-generator": "nx workspace-generator",
     "generate:changelog": "npx standard-version"
   },
