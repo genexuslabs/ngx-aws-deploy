@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 15.x]
+        node: [ 14, 16, 18 ]
     
     env:
       NX_BRANCH: ${{ github.event.number }}
@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.version }}
+          node-version: ${{ matrix.node }}
       - name: Install Builder Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
