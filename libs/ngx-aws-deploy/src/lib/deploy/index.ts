@@ -81,7 +81,8 @@ export default createBuilder(
       context.logger.info(`✔ Build Completed`);
     }
     if (buildResult.success) {
-      const filesPath = buildResult.outputPath as string;
+      const filesPath = buildResult.outputPath ?? buildResult.outputs[0].path;
+
       const files = getFiles(filesPath);
 
       if (files.length === 0) {
