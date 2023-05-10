@@ -91,7 +91,7 @@
       "outputs": ["{workspaceRoot}/coverage/apps/demo-app"]
     },
     "deploy": {
-      "executor": "@jefiozie/ngx-aws-deploy:deploy",
+      "executor": "@genexus/ngx-aws-deploy:deploy",
       "options": {},
       "configurations": {
         "production": {

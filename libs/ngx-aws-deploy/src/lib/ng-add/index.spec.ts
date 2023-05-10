@@ -69,7 +69,7 @@ describe('ng-add', () => {
 
       expect(angularJson.projects[PROJECT_NAME].architect.deploy).toStrictEqual(
         {
-          builder: '@jefiozie/ngx-aws-deploy:deploy',
+          builder: '@genexus/ngx-aws-deploy:deploy',
         }
       );
     });
@@ -103,7 +103,7 @@ describe('ng-add', () => {
       expect(
         angularJson.projects[OTHER_PROJECT_NAME].architect.deploy
       ).toStrictEqual({
-        builder: '@jefiozie/ngx-aws-deploy:deploy',
+        builder: '@genexus/ngx-aws-deploy:deploy',
       });
     });
   });
