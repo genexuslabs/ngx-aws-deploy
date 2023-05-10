@@ -11,19 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [ 14, 16, 18 ]
-    
+        node-version: [16.x, 18.x]
+
     env:
       NX_BRANCH: ${{ github.event.number }}
       NX_RUN_GROUP: ${{ github.run_id }}
-    
+
     steps:
       - name: Clone repository
         # `fetch-depth` defaults to 1.
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Cache builder node modules
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v1
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
@@ -31,15 +31,15 @@ jobs:
             ${{ runner.OS }}-build-${{ env.cache-name }}-
             ${{ runner.OS }}-build-${{ matrix.version }}
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node }}
+          node-version: ${{ matrix.version }}
       - name: Install Builder Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Symlink dist 🔗
-        run: npm run symlinks        
+        run: npm run symlinks
       - name: Tests coverage
         run: npm run nx run-many -- --target=test --all --codeCoverage
       - name: Build
-        run: npm run nx run-many -- --target=build --all --parallel=true --with-deps=true --prod
+        run: npm run nx run-many -- --target=build --all --parallel=true --prod
