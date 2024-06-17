@@ -82,7 +82,26 @@ export default createBuilder(
       context.logger.info(`✔ Build Completed`);
     }
     if (buildResult.success) {
-      const filesPath = buildResult.outputPath ?? buildResult.outputs[0].path;
+      let filesPath: string;
+
+      // Check if the application uses the ESBuild and Vite based build tool.
+      // Starting with Angular 18, the build tool name is "@angular/build:application"
+      if (
+        buildResult.info?.name ===
+          "@angular-devkit/build-angular:application" ||
+        buildResult.info?.name === "@angular/build:application"
+      ) {
+        // This is a WA since in the new build tool the output path is no longer
+        // an explicit property of the object
+        const projectPath = buildResult.info.import.split("\\node_modules")[0];
+        filesPath = `${projectPath}\\dist\\browser`;
+      }
+      // Older versions of Angular that use Webpack or recent version that are
+      // still based on Webpack
+      else {
+        filesPath = buildResult.outputPath ?? buildResult.outputs[0].path;
+      }
+
       const files = getFiles(filesPath);
 
       if (files.length === 0) {
