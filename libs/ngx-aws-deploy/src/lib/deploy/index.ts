@@ -3,16 +3,16 @@ import {
   BuilderOutput,
   createBuilder,
   targetFromTargetString,
-} from '@angular-devkit/architect';
-import * as glob from 'glob';
-import { getAccessKeyId, getSecretAccessKey } from './config';
-import { CloudFront } from './cloudfront';
-import { Schema } from './schema';
-import { Uploader } from './uploader';
+} from "@angular-devkit/architect";
+import * as glob from "glob";
+import { getAccessKeyId, getSecretAccessKey } from "./config";
+import { CloudFront } from "./cloudfront";
+import { Schema } from "./schema";
+import { Uploader } from "./uploader";
 
 const getFiles = (filesPath: string) => {
   return glob.sync(`**`, {
-    ignore: ['.git'],
+    ignore: [".git"],
     cwd: filesPath,
     nodir: true,
     // Directory and file names may contain `.` at the beginning,
@@ -26,9 +26,9 @@ export default createBuilder(
     builderConfig: Schema,
     context: BuilderContext
   ): Promise<BuilderOutput> => {
-    context.reportStatus('Executing deployment');
+    context.reportStatus("Executing deployment");
     if (!context.target) {
-      throw new Error('Cannot deploy the application without a target');
+      throw new Error("Cannot deploy the application without a target");
     }
     const buildTarget = {
       name:
@@ -50,7 +50,7 @@ export default createBuilder(
 
     const deployConfig = { bucket, region, subFolder } as Pick<
       Schema,
-      'bucket' | 'region' | 'subFolder'
+      "bucket" | "region" | "subFolder"
     >;
 
     let buildResult: BuilderOutput;
@@ -82,22 +82,41 @@ export default createBuilder(
       context.logger.info(`✔ Build Completed`);
     }
     if (buildResult.success) {
-      const filesPath = buildResult.outputPath ?? buildResult.outputs[0].path;
+      let filesPath: string;
+
+      // Check if the application uses the ESBuild and Vite based build tool.
+      // Starting with Angular 18, the build tool name is "@angular/build:application"
+      if (
+        buildResult.info?.name ===
+          "@angular-devkit/build-angular:application" ||
+        buildResult.info?.name === "@angular/build:application"
+      ) {
+        // This is a WA since in the new build tool the output path is no longer
+        // an explicit property of the object
+        const projectPath = buildResult.info.import.split("\\node_modules")[0];
+        filesPath = `${projectPath}\\dist\\browser`;
+      }
+      // Older versions of Angular that use Webpack or recent version that are
+      // still based on Webpack
+      else {
+        filesPath = buildResult.outputPath ?? buildResult.outputs[0].path;
+      }
+
       const files = getFiles(filesPath);
 
       if (files.length === 0) {
         throw new Error(
-          'Target did not produce any files, or the path is incorrect.'
+          "Target did not produce any files, or the path is incorrect."
         );
       }
       if (getAccessKeyId() || getSecretAccessKey()) {
         const uploader = new Uploader(context, deployConfig);
 
         if (builderConfig.deleteBeforeUpload) {
-          context.logger.info('Start removing files before upload...');
+          context.logger.info("Start removing files before upload...");
           const success = await uploader.deleteAllFiles();
           if (success) {
-            context.logger.info('✔ Finished removing files...');
+            context.logger.info("✔ Finished removing files...");
           } else {
             return {
               error: `❌  We encounterd an error during the removal of the files`,
@@ -106,16 +125,16 @@ export default createBuilder(
           }
         }
 
-        context.logger.info('Start uploading files...');
+        context.logger.info("Start uploading files...");
         const success = await uploader.upload(files, filesPath);
         if (success) {
-          context.logger.info('✔ Finished uploading files...');
+          context.logger.info("✔ Finished uploading files...");
 
           if (builderConfig.deleteAfterUpload) {
-            context.logger.info('Start removing files after upload...');
+            context.logger.info("Start removing files after upload...");
             const success = await uploader.deleteStaleFiles(files);
             if (success) {
-              context.logger.info('✔ Finished removing files...');
+              context.logger.info("✔ Finished removing files...");
             } else {
               return {
                 error: `❌  Error during files removal`,
@@ -124,11 +143,11 @@ export default createBuilder(
             }
           }
 
-          context.logger.info('Start CloudFront invalidation...');
+          context.logger.info("Start CloudFront invalidation...");
           const cloudFront = new CloudFront(context, deployConfig);
           const success = await cloudFront.invalidate();
           if (success) {
-            context.logger.info('✔ Finished CloudFront invalidation...');
+            context.logger.info("✔ Finished CloudFront invalidation...");
             return { success: true };
           } else {
             context.logger.error(`❌  Error during CloudFront invalidation`);
