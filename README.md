@@ -1,5 +1,14 @@
 # NGX-AWS-DEPLOY
 
+### How to Publish new package version to npm?
+
+Run:
+```
+npm version patch
+git push --follow-tags
+```
+
+
 ☁️🚀 Deploy your Angular app to Amazon S3 directly from the Angular CLI 🚀☁️
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
