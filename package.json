@@ -31,7 +31,6 @@
     "generate:changelog": "npx standard-version",
     "deploy": "nx deploy"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "14.2.6",
     "@angular/common": "14.2.6",
