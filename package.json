@@ -1,6 +1,6 @@
 {
   "name": "@genexus/ngx-aws-deploy",
-  "version": "5.4.0",
+  "version": "5.4.1",
   "license": "MIT",
   "scripts": {
     "ng": "nx",
